@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useLanguage } from "@/src/context/LanguageContext";
 
 /* =======================
    PRESCRIPTION DATA (BACKEND READY)
@@ -46,12 +47,14 @@ const PRESCRIPTION = {
 };
 
 export default function Prescriptions() {
+  const { t } = useLanguage();
+
   return (
     <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
       {/* HEADER */}
       <LinearGradient colors={["#E46B2E", "#F78DA7"]} style={styles.header}>
         <Text style={styles.clinic}>{PRESCRIPTION.clinic}</Text>
-        <Text style={styles.title}>Medical Prescription</Text>
+        <Text style={styles.title}>{t('medical_prescription')}</Text>
       </LinearGradient>
 
       {/* BODY */}
@@ -65,7 +68,7 @@ export default function Prescriptions() {
             </Text>
           </View>
           <Text style={styles.sub}>
-            Reg No: {PRESCRIPTION.doctor.regNo}
+            {t('reg_no')}: {PRESCRIPTION.doctor.regNo}
           </Text>
         </View>
 
@@ -74,12 +77,12 @@ export default function Prescriptions() {
         {/* PATIENT INFO */}
         <View style={styles.rowBetween}>
           <Text style={styles.info}>
-            Patient: {PRESCRIPTION.patient.name}
+            {t('patient')}: {PRESCRIPTION.patient.name}
           </Text>
-          <Text style={styles.info}>Date: {PRESCRIPTION.date}</Text>
+          <Text style={styles.info}>{t('date')}: {PRESCRIPTION.date}</Text>
         </View>
         <Text style={styles.info}>
-          Age: {PRESCRIPTION.patient.age} •{" "}
+          {t('age')}: {PRESCRIPTION.patient.age} •{" "}
           {PRESCRIPTION.patient.gender}
         </Text>
 
@@ -96,20 +99,20 @@ export default function Prescriptions() {
             </Text>
 
             <Text style={styles.medDetail}>
-              Frequency: {med.frequency}
+              {t('frequency')}: {med.frequency}
             </Text>
             <Text style={styles.medDetail}>
-              Duration: {med.duration}
+              {t('duration')}: {med.duration}
             </Text>
             <Text style={styles.medDetail}>
-              Instructions: {med.instructions}
+              {t('instructions')}: {med.instructions}
             </Text>
           </View>
         ))}
 
         {/* NOTES */}
         <View style={styles.notesBox}>
-          <Text style={styles.notesTitle}>Doctor’s Notes</Text>
+          <Text style={styles.notesTitle}>{t('doctors_notes')}</Text>
           <Text style={styles.notes}>{PRESCRIPTION.notes}</Text>
         </View>
 
@@ -126,12 +129,12 @@ export default function Prescriptions() {
       <View style={styles.actions}>
         <TouchableOpacity style={styles.actionBtn}>
           <Ionicons name="download-outline" size={18} color="#fff" />
-          <Text style={styles.actionText}>Download PDF</Text>
+          <Text style={styles.actionText}>{t('download')} PDF</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.outlineBtn}>
           <Ionicons name="print-outline" size={18} color="#CC6600" />
-          <Text style={styles.outlineText}>Print</Text>
+          <Text style={styles.outlineText}>{t('print')}</Text>
         </TouchableOpacity>
       </View>
 

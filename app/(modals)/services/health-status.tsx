@@ -1,5 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
+import { useLanguage } from "../../../src/context/LanguageContext";
 import {
     ScrollView,
     StyleSheet,
@@ -10,6 +11,7 @@ import {
 } from "react-native";
 
 export default function HealthProfile() {
+  const { t } = useLanguage();
   const [profile, setProfile] = useState({
     height: "",
     weight: "",
@@ -30,68 +32,68 @@ export default function HealthProfile() {
     <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
       {/* HEADER */}
       <LinearGradient colors={["#E46B2E", "#F78DA7"]} style={styles.header}>
-        <Text style={styles.title}>Health Profile</Text>
+        <Text style={styles.title}>{t('health_profile')}</Text>
         <Text style={styles.subtitle}>
-          Manage your personal health information
+          {t('manage_health_info')}
         </Text>
       </LinearGradient>
 
       {/* BODY INFO */}
-      <Section title="Basic Information">
-        <Input label="Height (cm)" value={profile.height} onChange={(v) => update("height", v)} />
-        <Input label="Weight (kg)" value={profile.weight} onChange={(v) => update("weight", v)} />
-        <Input label="Blood Group" value={profile.bloodGroup} onChange={(v) => update("bloodGroup", v)} />
+      <Section title={t('basic_info')}>
+        <Input label={t('height')} value={profile.height} onChange={(v: string) => update("height", v)} />
+        <Input label={t('weight')} value={profile.weight} onChange={(v: string) => update("weight", v)} />
+        <Input label={t('blood_group')} value={profile.bloodGroup} onChange={(v: string) => update("bloodGroup", v)} />
       </Section>
 
       {/* MEDICAL HISTORY */}
-      <Section title="Medical History">
+      <Section title={t('medical_history')}>
         <TextArea
-          label="Existing Conditions (e.g. heart attack, diabetes)"
+          label={t('existing_conditions')}
           value={profile.conditions}
-          onChange={(v) => update("conditions", v)}
+          onChange={(v: string) => update("conditions", v)}
         />
         <TextArea
-          label="Past Surgeries / Hospitalizations"
+          label={t('past_surgeries')}
           value={profile.surgeries}
-          onChange={(v) => update("surgeries", v)}
+          onChange={(v: string) => update("surgeries", v)}
         />
         <TextArea
-          label="Allergies"
+          label={t('allergies')}
           value={profile.allergies}
-          onChange={(v) => update("allergies", v)}
+          onChange={(v: string) => update("allergies", v)}
         />
         <TextArea
-          label="Current Medications"
+          label={t('current_medications')}
           value={profile.medications}
-          onChange={(v) => update("medications", v)}
+          onChange={(v: string) => update("medications", v)}
         />
       </Section>
 
       {/* LIFESTYLE */}
-      <Section title="Lifestyle">
+      <Section title={t('lifestyle')}>
         <Choice
-          label="Smoking"
+          label={t('smoking')}
           value={profile.smoking}
-          onSelect={(v) => update("smoking", v)}
-          options={["No", "Occasionally", "Yes"]}
+          onSelect={(v: string) => update("smoking", v)}
+          options={[t('no'), t('occasionally'), t('yes')]}
         />
         <Choice
-          label="Alcohol"
+          label={t('alcohol')}
           value={profile.alcohol}
-          onSelect={(v) => update("alcohol", v)}
-          options={["No", "Occasionally", "Yes"]}
+          onSelect={(v: string) => update("alcohol", v)}
+          options={[t('no'), t('occasionally'), t('yes')]}
         />
         <Choice
-          label="Physical Activity"
+          label={t('physical_activity')}
           value={profile.activity}
-          onSelect={(v) => update("activity", v)}
-          options={["Low", "Moderate", "High"]}
+          onSelect={(v: string) => update("activity", v)}
+          options={[t('low'), t('moderate'), t('high')]}
         />
       </Section>
 
       {/* SAVE */}
       <TouchableOpacity style={styles.saveBtn}>
-        <Text style={styles.saveText}>Save Health Profile</Text>
+        <Text style={styles.saveText}>{t('save_profile')}</Text>
       </TouchableOpacity>
 
       <View style={{ height: 120 }} />

@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
+import { useLanguage } from "../../src/context/LanguageContext";
 import {
     Alert,
     ScrollView,
@@ -32,41 +33,29 @@ const DOCTORS = [
   },
 ];
 
-/* ==========================
-   TIME SLOTS
-   ========================== */
-const SLOTS = [
-  "09:00 AM",
-  "09:30 AM",
-  "10:00 AM",
-  "10:30 AM",
-  "11:00 AM",
-  "11:30 AM",
-];
-
-const CONSULT_TYPES = [
-  { id: "video", label: "Video Call", icon: "videocam-outline" },
-  { id: "audio", label: "Audio Call", icon: "call-outline" },
-  { id: "clinic", label: "Clinic Visit", icon: "location-outline" },
-];
-
 export default function Appointments() {
+  const { t } = useLanguage();
   const [doctor, setDoctor] = useState<any>(null);
   const [date, setDate] = useState("Today");
-  const [slot, setSlot] = useState<string | null>(null);
   const [type, setType] = useState("video");
+
+  const CONSULT_TYPES = [
+    { id: "video", label: t('video_call'), icon: "videocam-outline" },
+    { id: "audio", label: t('audio_call'), icon: "call-outline" },
+    { id: "clinic", label: t('clinic_visit'), icon: "location-outline" },
+  ];
 
   const total = doctor ? doctor.fee : 0;
 
   const confirmBooking = () => {
-    if (!doctor || !slot) {
-      Alert.alert("Incomplete", "Please select doctor and time slot.");
+    if (!doctor) {
+      Alert.alert("Incomplete", "Please select a doctor to continue.");
       return;
     }
 
     Alert.alert(
-      "Appointment Confirmed",
-      `Your appointment with ${doctor.name} is booked.`,
+      "Request Sent",
+      `Your appointment request with ${doctor.name} has been sent. The doctor will confirm a time slot soon.`,
       [{ text: "OK" }]
     );
   };
@@ -75,14 +64,14 @@ export default function Appointments() {
     <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
       {/* HEADER */}
       <LinearGradient colors={["#E46B2E", "#F78DA7"]} style={styles.header}>
-        <Text style={styles.title}>Book Appointment</Text>
+        <Text style={styles.title}>{t('appointments')}</Text>
         <Text style={styles.subtitle}>
-          Choose doctor, date & time
+          {t('choose_doctor_date')}
         </Text>
       </LinearGradient>
 
       {/* DOCTORS */}
-      <Section title="Select Doctor">
+      <Section title={t('select_doctor')}>
         {DOCTORS.map((d) => (
           <TouchableOpacity
             key={d.id}
@@ -115,9 +104,9 @@ export default function Appointments() {
       </Section>
 
       {/* DATE */}
-      <Section title="Select Date">
+      <Section title={t('select_date')}>
         <View style={styles.row}>
-          {["Today", "Tomorrow", "Next Day"].map((d) => (
+          {[t('today'), t('tomorrow'), "Next Day"].map((d) => (
             <Chip
               key={d}
               label={d}
@@ -128,22 +117,8 @@ export default function Appointments() {
         </View>
       </Section>
 
-      {/* TIME */}
-      <Section title="Select Time Slot">
-        <View style={styles.grid}>
-          {SLOTS.map((s) => (
-            <Slot
-              key={s}
-              label={s}
-              active={slot === s}
-              onPress={() => setSlot(s)}
-            />
-          ))}
-        </View>
-      </Section>
-
       {/* CONSULT TYPE */}
-      <Section title="Consultation Type">
+      <Section title={t('consult_type')}>
         <View style={styles.row}>
           {CONSULT_TYPES.map((c) => (
             <TouchableOpacity
@@ -174,17 +149,17 @@ export default function Appointments() {
 
       {/* PAYMENT */}
       {doctor && (
-        <Section title="Payment Summary">
-          <Row label="Consultation Fee" value={`₹${doctor.fee}`} />
-          <Row label="Platform Charges" value="₹0" />
-          <Row label="Total Payable" value={`₹${total}`} bold />
+        <Section title={t('payment_summary')}>
+          <Row label={t('consult_fee')} value={`₹${doctor.fee}`} />
+          <Row label={t('platform_charges')} value="₹0" />
+          <Row label={t('total_payable')} value={`₹${total}`} bold />
         </Section>
       )}
 
       {/* CONFIRM */}
       <TouchableOpacity style={styles.payBtn} onPress={confirmBooking}>
-        <Ionicons name="lock-closed-outline" size={18} color="#fff" />
-        <Text style={styles.payText}>Confirm & Pay</Text>
+        <Ionicons name="send-outline" size={18} color="#fff" />
+        <Text style={styles.payText}>{t('request_appointment')}</Text>
       </TouchableOpacity>
 
       <View style={{ height: 120 }} />

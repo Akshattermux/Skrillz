@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
+import { useLanguage } from "../../../src/context/LanguageContext";
 import {
     ScrollView,
     StyleSheet,
@@ -12,6 +13,7 @@ import {
 } from "react-native";
 
 export default function ConsultationRoom() {
+  const { t } = useLanguage();
   const [message, setMessage] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
 
@@ -81,7 +83,7 @@ export default function ConsultationRoom() {
         onPress={() => setHistoryOpen(!historyOpen)}
       >
         <Ionicons name="document-text-outline" size={18} color="#CC6600" />
-        <Text style={styles.historyText}>Patient History</Text>
+        <Text style={styles.historyText}>{t('patient_history')}</Text>
         <Ionicons
           name={historyOpen ? "chevron-down" : "chevron-up"}
           size={18}
@@ -104,7 +106,7 @@ export default function ConsultationRoom() {
       <TouchableOpacity style={styles.uploadBtn}>
         <Ionicons name="cloud-upload-outline" size={18} color="#CC6600" />
         <Text style={styles.uploadText}>
-          Upload Prescription / Report
+          {t('upload_prescription_report')}
         </Text>
       </TouchableOpacity>
 
@@ -116,7 +118,7 @@ export default function ConsultationRoom() {
 
         <TextInput
           style={styles.input}
-          placeholder="Type a message..."
+          placeholder={t('type_message')}
           placeholderTextColor="#999"
           value={message}
           onChangeText={setMessage}

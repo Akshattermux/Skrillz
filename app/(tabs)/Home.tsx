@@ -1,7 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+import { useLanguage } from "../../src/context/LanguageContext";
 import {
+  BackHandler,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,12 +14,29 @@ import {
 } from "react-native";
 
 export default function PatientHome() {
+  const { t } = useLanguage();
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        BackHandler.exitApp();
+        return true;
+      };
+
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
+
   return (
     <ScrollView style={styles.root} showsVerticalScrollIndicator={false}>
       {/* HEADER */}
       <LinearGradient colors={["#E46B2E", "#F78DA7"]} style={styles.header}>
         <View style={styles.headerTop}>
-          <Text style={styles.welcome}>Welcome back,</Text>
+          <Text style={styles.welcome}>{t('welcome')},</Text>
           <Text style={styles.username}>John Doe</Text>
 
           <TouchableOpacity style={styles.roleSwitch}>
@@ -29,7 +49,7 @@ export default function PatientHome() {
         <View style={styles.searchBox}>
           <Ionicons name="search" size={18} color="#999" />
           <TextInput
-            placeholder="Find a specialist, hospital, service"
+            placeholder={t('search_doctor')}
             placeholderTextColor="#999"
             style={styles.searchInput}
           />
@@ -38,12 +58,12 @@ export default function PatientHome() {
 
       {/* QUICK ACTIONS */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <Text style={styles.sectionTitle}>{t('quick_actions')}</Text>
 
         <View style={styles.actionsRow}>
           <ActionCard
             icon="calendar-outline"
-            title="Re-Book Appointment"
+            title={t('rebook')}
             subtitle="Book appointment with recently visited doctor"
             onPress={() => router.push("/(modals)/services/book-appointment")}
           />
@@ -76,8 +96,8 @@ export default function PatientHome() {
       {/* HEALTH STATS */}
       <View style={styles.section}>
         <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>Your Health Stats</Text>
-          <Text onPress={()=>router.push("/(modals)/services/health-status")} style={styles.link}>View Details</Text>
+          <Text style={styles.sectionTitle}>{t('health_stats')}</Text>
+          <Text onPress={()=>router.push("/(modals)/services/health-status")} style={styles.link}>{t('view_details')}</Text>
         </View>
 
         <View style={styles.statsRow}>
@@ -90,8 +110,8 @@ export default function PatientHome() {
       {/* UPCOMING APPOINTMENTS */}
       <View style={styles.section}>
         <View  style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>Upcoming Appointments</Text>
-          <Text onPress={()=>router.push("/(modals)/services/appointments")} style={styles.link}>View All</Text>
+          <Text style={styles.sectionTitle}>{t('upcoming_apps')}</Text>
+          <Text onPress={()=>router.push("/(modals)/services/appointments")} style={styles.link}>{t('view_all')}</Text>
         </View>
 
         <AppointmentCard />
@@ -100,8 +120,8 @@ export default function PatientHome() {
       {/* RECOMMENDED DOCTORS */}
       <View style={styles.section}>
         <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>Recommended Doctors</Text>
-          <Text onPress={()=>router.push("/(modals)/services/recommended-doctors")} style={styles.link}>View All</Text>
+          <Text style={styles.sectionTitle}>{t('recommended_docs')}</Text>
+          <Text onPress={()=>router.push("/(modals)/services/recommended-doctors")} style={styles.link}>{t('view_all')}</Text>
         </View>
 
         <DoctorCard
@@ -147,6 +167,7 @@ function StatBox({ count, label }: any) {
 }
 
 function AppointmentCard() {
+  const { t } = useLanguage();
   return (
     <View style={styles.appointmentCard}>
       <View>
@@ -155,13 +176,14 @@ function AppointmentCard() {
         <Text style={styles.appointmentDate}>Tomorrow • 10:30 AM</Text>
       </View>
       <TouchableOpacity onPress={()=>router.push("/(modals)/services/consultation-room")} style={styles.joinBtn}>
-        <Text  style={styles.joinText}>Join</Text>
+        <Text  style={styles.joinText}>{t('join')}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
 function DoctorCard({ name, specialty, rating, patients }: any) {
+  const { t } = useLanguage();
   return (
     <View style={styles.doctorCard}>
       <View style={styles.avatar}>
@@ -180,7 +202,7 @@ function DoctorCard({ name, specialty, rating, patients }: any) {
         style={styles.bookBtn}
         onPress={() => router.push("/(modals)/services/book-appointment")}
       >
-        <Text style={styles.bookText}>Book</Text>
+        <Text style={styles.bookText}>{t('book_now')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -233,6 +255,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF3E8",
     borderRadius: 16,
     padding: 16,
+    borderWidth: 1.2,
+    borderColor: 'rgba(204, 102, 0, 0.12)',
   },
   actionTitle: { fontWeight: "600", marginTop: 8 },
   actionSubtitle: { fontSize: 12, color: "#777", marginTop: 4 },
@@ -248,6 +272,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 14,
     alignItems: "center",
+    borderWidth: 1.2,
+    borderColor: 'rgba(204, 102, 0, 0.12)',
   },
   statCount: { fontSize: 18, fontWeight: "700", color: "#CC6600" },
   statLabel: { fontSize: 12, color: "#666", marginTop: 4 },
@@ -260,6 +286,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    borderWidth: 1.2,
+    borderColor: 'rgba(204, 102, 0, 0.15)',
   },
   appointmentTitle: { fontWeight: "600" },
   appointmentSub: { fontSize: 12, color: "#666", marginTop: 2 },
@@ -279,6 +307,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 14,
     marginTop: 12,
+    borderWidth: 1.2,
+    borderColor: 'rgba(204, 102, 0, 0.12)',
   },
   avatar: {
     width: 44,

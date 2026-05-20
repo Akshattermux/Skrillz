@@ -2,6 +2,7 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
+import { useLanguage } from "../../src/context/LanguageContext";
 import {
     KeyboardAvoidingView,
     Platform,
@@ -16,6 +17,8 @@ import {
 export default function SignupScreen() {
   const [role, setRole] = useState<"doctor" | "patient" | "student">("patient");
   const [name, setName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const { t, language } = useLanguage();
 
   const goSocialPassword = () => {
     router.push({
@@ -41,51 +44,67 @@ export default function SignupScreen() {
         >
           {/* HEADER */}
           <LinearGradient colors={["#E46B2E", "#F78DA7"]} style={styles.header}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Join SKRILZ today</Text>
+            <View style={styles.headerTop}>
+              <TouchableOpacity 
+                style={styles.langButton} 
+                onPress={() => router.push("/?force=true")}
+              >
+                <Ionicons name="language" size={18} color="#fff" />
+                <Text style={styles.langButtonText}>{language?.toUpperCase() || "EN"}</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.title}>{t('create_account')}</Text>
+            <Text style={styles.subtitle}>{t('join_today')}</Text>
           </LinearGradient>
 
           {/* FORM */}
           <View style={styles.card}>
-            <Text style={styles.section}>Personal Information</Text>
+            <Text style={styles.section}>{t('personal_info')}</Text>
 
             <Input
               icon="person-outline"
-              placeholder="Full name"
+              placeholder={t('profile')}
               value={name}
               onChangeText={setName}
             />
-            <Input icon="mail-outline" placeholder="Email address" />
-            <Input icon="lock-closed-outline" placeholder="Password" secure />
+            <Input icon="mail-outline" placeholder={t('email_placeholder')} />
+            <Input 
+              icon="lock-closed-outline" 
+              placeholder={t('pass_placeholder')} 
+              secure={!showPassword} 
+              isPassword={true}
+              onToggle={() => setShowPassword(!showPassword)}
+              showPassword={showPassword}
+            />
 
-            <Text style={styles.section}>I am a...</Text>
+            <Text style={styles.section}>{t('i_am_a')}</Text>
 
             <View style={styles.roleRow}>
-              <RoleButton label="Doctor" active={role === "doctor"} onPress={() => setRole("doctor")} />
-              <RoleButton label="Patient" active={role === "patient"} onPress={() => setRole("patient")} />
-              <RoleButton label="Student" active={role === "student"} onPress={() => setRole("student")} />
+              <RoleButton label={t('doctor_role')} active={role === "doctor"} onPress={() => setRole("doctor")} />
+              <RoleButton label={t('patient_role')} active={role === "patient"} onPress={() => setRole("patient")} />
+              <RoleButton label={t('student_role')} active={role === "student"} onPress={() => setRole("student")} />
             </View>
 
             <TouchableOpacity style={styles.primaryBtn}>
-              <Text style={styles.primaryText}>Create Account</Text>
+              <Text style={styles.primaryText}>{t('create_account')}</Text>
             </TouchableOpacity>
 
             {/* DIVIDER */}
             <View style={styles.dividerRow}>
               <View style={styles.divider} />
-              <Text style={styles.or}>OR</Text>
+              <Text style={styles.or}>{t('or')}</Text>
               <View style={styles.divider} />
             </View>
 
             {/* SOCIAL */}
-            <SocialButton icon={<Ionicons name="logo-apple" size={22} />} text="Continue with Apple" onPress={goSocialPassword} />
-            <SocialButton icon={<FontAwesome name="google" size={18} />} text="Continue with Google" onPress={goSocialPassword} />
-            <SocialButton icon={<FontAwesome name="linkedin" size={18} />} text="Continue with LinkedIn" onPress={goSocialPassword} />
+            <SocialButton icon={<Ionicons name="logo-apple" size={22} />} text={t('continue_with_apple')} onPress={goSocialPassword} />
+            <SocialButton icon={<FontAwesome name="google" size={18} />} text={t('continue_with_google')} onPress={goSocialPassword} />
+            <SocialButton icon={<FontAwesome name="linkedin" size={18} />} text={t('continue_with_linkedin')} onPress={goSocialPassword} />
 
             <Text style={styles.footer}>
-              Already have an account?{" "}
+              {t('already_account')}{" "}
               <Text style={styles.link} onPress={() => router.push("/(auth)/login")}>
-                Sign In
+                {t('login')}
               </Text>
             </Text>
           </View>
@@ -97,7 +116,7 @@ export default function SignupScreen() {
 
 /* ---------- COMPONENTS ---------- */
 
-function Input({ icon, placeholder, secure = false, value, onChangeText }: any) {
+function Input({ icon, placeholder, secure = false, value, onChangeText, isPassword, onToggle, showPassword }: any) {
   return (
     <View style={styles.inputBox}>
       <Ionicons name={icon} size={20} color="#C56A2D" />
@@ -109,6 +128,15 @@ function Input({ icon, placeholder, secure = false, value, onChangeText }: any) 
         value={value}
         onChangeText={onChangeText}
       />
+      {isPassword && (
+        <TouchableOpacity onPress={onToggle}>
+          <Ionicons 
+            name={showPassword ? "eye-off-outline" : "eye-outline"} 
+            size={20} 
+            color="#C56A2D" 
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -135,11 +163,30 @@ function SocialButton({ icon, text, onPress }: any) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: "#fff" },
   header: {
-    height: 220,
-    paddingTop: 80,
+    paddingTop: 60,
     paddingHorizontal: 24,
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
+    paddingBottom: 25,
+  },
+  headerTop: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginBottom: 10,
+  },
+  langButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.2)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  langButtonText: {
+    color: "#fff",
+    marginLeft: 5,
+    fontWeight: "700",
+    fontSize: 12,
   },
   title: { fontSize: 30, fontWeight: "700", color: "#fff" },
   subtitle: { fontSize: 14, color: "#FFE8D9", marginTop: 6 },

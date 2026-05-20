@@ -20,33 +20,17 @@ const DOCTOR = {
 
 const DATES = ["Today", "Tomorrow", "Wed", "Thu", "Fri"];
 
-const SLOTS = [
-  "09:00 AM",
-  "10:30 AM",
-  "12:00 PM",
-  "03:00 PM",
-  "04:30 PM",
-  "06:00 PM",
-];
-
 export default function BookAppointment() {
   const [date, setDate] = useState("Today");
-  const [slot, setSlot] = useState<string | null>(null);
   const [type, setType] = useState("Video");
   const [payment, setPayment] = useState("UPI");
 
   const confirmBooking = () => {
-    if (!slot) {
-      Alert.alert("Select Slot", "Please select a time slot to continue.");
-      return;
-    }
-
     Alert.alert(
-      "Confirm Appointment",
+      "Request Appointment",
       `Doctor: ${DOCTOR.name}
 Type: ${type}
 Date: ${date}
-Time: ${slot}
 Fee: ₹${DOCTOR.fee}`,
       [
         { text: "Cancel", style: "cancel" },
@@ -54,8 +38,8 @@ Fee: ₹${DOCTOR.fee}`,
           text: "Confirm",
           onPress: () =>
             Alert.alert(
-              "Booking Successful",
-              "Your appointment has been booked."
+              "Request Sent",
+              "Your appointment request has been sent to the doctor. They will confirm a time soon."
             ),
         },
       ]
@@ -89,7 +73,7 @@ Fee: ₹${DOCTOR.fee}`,
       {/* CONSULTATION TYPE */}
       <Section title="Consultation Type">
         <Choice
-          options={["Video", "Audio", "Clinic"]}
+          options={["Video", "Audio", "Message"]}
           value={type}
           onSelect={setType}
         />
@@ -107,31 +91,6 @@ Fee: ₹${DOCTOR.fee}`,
             />
           ))}
         </ScrollView>
-      </Section>
-
-      {/* SLOT */}
-      <Section title="Select Time Slot">
-        <View style={styles.slotGrid}>
-          {SLOTS.map((s) => (
-            <TouchableOpacity
-              key={s}
-              style={[
-                styles.slot,
-                slot === s && styles.slotActive,
-              ]}
-              onPress={() => setSlot(s)}
-            >
-              <Text
-                style={[
-                  styles.slotText,
-                  slot === s && styles.slotTextActive,
-                ]}
-              >
-                {s}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
       </Section>
 
       {/* PAYMENT */}
@@ -153,7 +112,7 @@ Fee: ₹${DOCTOR.fee}`,
 
       {/* CONFIRM */}
       <TouchableOpacity style={styles.confirmBtn} onPress={confirmBooking}>
-        <Text style={styles.confirmText}>Confirm & Pay ₹{DOCTOR.fee}</Text>
+        <Text style={styles.confirmText}>Request & Pay ₹{DOCTOR.fee}</Text>
       </TouchableOpacity>
 
       <View style={{ height: 120 }} />

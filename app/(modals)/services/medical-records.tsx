@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useLanguage } from "../../../src/context/LanguageContext";
 
 /* =======================
    RECORDS DATA (BACKEND READY)
@@ -44,14 +45,16 @@ const RECORDS = [
 ];
 
 export default function MedicalRecords() {
+  const { t } = useLanguage();
+
   const onUpload = () => {
     Alert.alert(
-      "Upload Medical Record",
-      "Choose how you want to upload your medical document.",
+      t("upload_prescription_report"),
+      t("choose_action"),
       [
-        { text: "Camera (Scan)", onPress: () => {} },
-        { text: "Upload PDF / Image", onPress: () => {} },
-        { text: "Cancel", style: "cancel" },
+        { text: t("camera_scan"), onPress: () => {} },
+        { text: t("upload_pdf_img"), onPress: () => {} },
+        { text: t("cancel"), style: "cancel" },
       ]
     );
   };
@@ -62,9 +65,9 @@ export default function MedicalRecords() {
       <LinearGradient colors={["#E46B2E", "#F78DA7"]} style={styles.header}>
         <View style={styles.headerRow}>
           <View>
-            <Text style={styles.title}>Medical Records</Text>
+            <Text style={styles.title}>{t("medical_records")}</Text>
             <Text style={styles.subtitle}>
-              Upload and manage your health documents
+              {t("upload_manage_health")}
             </Text>
           </View>
 
@@ -90,15 +93,17 @@ export default function MedicalRecords() {
    RECORD CARD
    ======================= */
 function RecordCard({ record }: any) {
+  const { t } = useLanguage();
+
   const onOptions = () => {
     Alert.alert(
       record.title,
-      "Choose an action",
+      t("choose_action"),
       [
-        { text: "View", onPress: () => {} },
-        { text: "Download", onPress: () => {} },
-        { text: "Delete", style: "destructive", onPress: () => {} },
-        { text: "Cancel", style: "cancel" },
+        { text: t("view"), onPress: () => {} },
+        { text: t("download"), onPress: () => {} },
+        { text: t("delete"), style: "destructive", onPress: () => {} },
+        { text: t("cancel"), style: "cancel" },
       ]
     );
   };
@@ -121,7 +126,7 @@ function RecordCard({ record }: any) {
           <Text style={styles.cardDate}>{record.date}</Text>
           <Text style={styles.dot}>•</Text>
           <Text style={styles.uploadedBy}>
-            Uploaded by {record.uploadedBy}
+            {t("uploaded_by")} {record.uploadedBy === "Doctor" ? t("doctor_role") : t("patient_role")}
           </Text>
         </View>
       </View>

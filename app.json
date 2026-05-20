@@ -2,31 +2,28 @@
   "expo": {
     "name": "Skrillz",
     "slug": "Skrillz",
-    "splash": {
-      "backgroundColor": "#F46C2D"
-    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "skrillz",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.akshatsharmavats.skrillz",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.akshatsharmavats.skrillz",
+      "permissions": [
+        "INTERNET",
+        "INTERNET"
+      ],
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
-      },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
-    },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+        "backgroundColor": "#E6F4FE"
+      }
     },
     "plugins": [
       "expo-router",
@@ -36,24 +33,25 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          "backgroundColor": "#F46C2D"
         }
       ],
-      "expo-web-browser"
+      "expo-video"
     ],
     "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
+      "typedRoutes": true
     },
     "extra": {
-      "router": {},
       "eas": {
         "projectId": "d424a6ee-974c-4a9b-9383-f72ba98ce531"
       }
     },
-    "owner": "akshatsharmavats"
+    "owner": "akshatsharmavats",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d424a6ee-974c-4a9b-9383-f72ba98ce531"
+    }
   }
 }

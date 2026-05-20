@@ -1,34 +1,48 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef } from "react";
-import { Animated, Dimensions, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 const { width } = Dimensions.get("window");
 
-export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
-  const progress = useRef(new Animated.Value(0)).current;
+export default function SplashScreen({
+  onFinish,
+}: {
+  onFinish: () => void;
+}) {
   const scale = useRef(new Animated.Value(0.9)).current;
   const opacity = useRef(new Animated.Value(0)).current;
+  const progress = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.parallel([
+    const animation = Animated.parallel([
       Animated.timing(scale, {
         toValue: 1,
-        duration: 800,
+        duration: 700,
         useNativeDriver: true,
       }),
       Animated.timing(opacity, {
         toValue: 1,
-        duration: 800,
+        duration: 700,
         useNativeDriver: true,
       }),
       Animated.timing(progress, {
-        toValue: width * 0.6,
-        duration: 2200,
-        useNativeDriver: false,
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true,
       }),
-    ]).start(() => {
-      setTimeout(onFinish, 300);
-    });
+    ]);
+
+    animation.start(onFinish);
+
+    return () => {
+      animation.stop();
+    };
   }, []);
 
   return (
@@ -39,26 +53,37 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
       <Animated.View
         style={[
           styles.center,
-          { transform: [{ scale }], opacity },
+          {
+            transform: [{ scale }],
+            opacity,
+          },
         ]}
       >
+        {/* LOGO */}
         <View style={styles.logoBox}>
           <Text style={styles.logoText}>S</Text>
         </View>
 
-        <Text style={styles.title}>SKRILZ</Text>
+        <Text style={styles.title}>SKRILLZ</Text>
         <Text style={styles.subtitle}>
           Healthcare & Education Ecosystem
         </Text>
 
+        {/* PROGRESS BAR */}
         <View style={styles.progressBar}>
           <Animated.View
-            style={[styles.progressFill, { width: progress }]}
+            style={[
+              styles.progressFill,
+              {
+                transform: [{ scaleX: progress }],
+                alignSelf: "flex-start",
+              },
+            ]}
           />
         </View>
       </Animated.View>
 
-      <Text style={styles.footer}>Made with ❤️ by MWM</Text>
+      <Text style={styles.footer}>Made with by MMW Corps</Text>
     </LinearGradient>
   );
 }
@@ -93,7 +118,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: "#ffe",
+    color: "#fff",
     opacity: 0.9,
     marginTop: 6,
     marginBottom: 26,
@@ -101,14 +126,13 @@ const styles = StyleSheet.create({
   progressBar: {
     width: width * 0.6,
     height: 4,
-    borderRadius: 2,
     backgroundColor: "rgba(255,255,255,0.25)",
     overflow: "hidden",
   },
   progressFill: {
+    width: "100%",
     height: "100%",
     backgroundColor: "#fff",
-    borderRadius: 2,
   },
   footer: {
     position: "absolute",
